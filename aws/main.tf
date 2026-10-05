@@ -19,7 +19,7 @@ resource "aws_instance" "my_web_app" {
 
   root_block_device {
     volume_type = "gp3"
-    volume_size = 3000
+    volume_size = 4000
     iops        = 16000
     throughput  = 1000
   }
@@ -89,7 +89,7 @@ resource "aws_dynamodb_table" "sessions" {
 resource "aws_efs_file_system" "shared" {
   creation_token                  = "dash-shared"
   throughput_mode                 = "provisioned"
-  provisioned_throughput_in_mibps = 256
+  provisioned_throughput_in_mibps = 512
 
   tags = {
     Name        = "dash-shared"
@@ -101,6 +101,21 @@ resource "aws_sqs_queue" "jobs" {
   name                       = "dash-jobs"
   visibility_timeout_seconds = 300
   message_retention_seconds  = 1209600
+}
+
+resource "aws_kinesis_stream" "events" {
+  name             = "dash-events"
+  shard_count      = 8
+  retention_period = 168
+}
+
+resource "aws_sns_topic" "alerts" {
+  name = "dash-alerts"
+}
+
+resource "aws_secretsmanager_secret" "app_config" {
+  name                    = "dash/app-config"
+  recovery_window_in_days = 30
 }
 
 resource "aws_cloudwatch_log_group" "lambda_hello" {
@@ -115,7 +130,7 @@ resource "aws_lambda_function" "my_hello_world" {
   function_name = "test"
   role          = "arn:aws:ec2:us-east-1:123123123123:instance/i-1231231231"
 
-  memory_size     = 3008
+  memory_size     = 10240
   timeout         = 60
   reserved_concurrent_executions = 10
   tags = {
