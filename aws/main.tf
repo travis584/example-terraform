@@ -29,10 +29,29 @@ resource "aws_ebs_volume" "app_data" {
   availability_zone = "us-east-1a"
   size              = 1500
   type              = "gp3"
+  iops              = 12000
+  throughput        = 500
 
   tags = {
     Name        = "dash-app-data"
     Environment = "production"
+  }
+}
+
+resource "aws_s3_bucket" "app_logs" {
+  bucket = "travis584-example-terraform-tfc-poc-logs"
+
+  tags = {
+    Name        = "dash-app-logs"
+    Environment = "production"
+  }
+}
+
+resource "aws_s3_bucket_versioning" "app_logs" {
+  bucket = aws_s3_bucket.app_logs.id
+
+  versioning_configuration {
+    status = "Enabled"
   }
 }
 
@@ -43,7 +62,9 @@ resource "aws_lambda_function" "my_hello_world" {
   function_name = "test"
   role          = "arn:aws:ec2:us-east-1:123123123123:instance/i-1231231231"
 
-  memory_size = 2048
+  memory_size     = 3008
+  timeout         = 60
+  reserved_concurrent_executions = 10
   tags = {
     Environment = "Prod"
   }
