@@ -9,7 +9,7 @@ provider "aws" {
 resource "aws_instance" "my_web_app" {
   ami = "ami-005e54dee72cc1d00"
 
-  instance_type = "m5.2xlarge"
+  instance_type = "m5.4xlarge"
 
   tags = {
     Environment = "production"
@@ -20,12 +20,14 @@ resource "aws_instance" "my_web_app" {
   root_block_device {
     volume_type = "gp3"
     volume_size = 2000
+    iops        = 16000
+    throughput  = 1000
   }
 }
 
 resource "aws_ebs_volume" "app_data" {
   availability_zone = "us-east-1a"
-  size              = 500
+  size              = 1500
   type              = "gp3"
 
   tags = {
