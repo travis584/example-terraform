@@ -27,7 +27,7 @@ resource "aws_instance" "my_web_app" {
 
 resource "aws_ebs_volume" "app_data" {
   availability_zone = "us-east-1a"
-  size              = 2500
+  size              = 4000
   type              = "gp3"
   iops              = 12000
   throughput        = 500
@@ -72,8 +72,8 @@ resource "aws_s3_bucket_lifecycle_configuration" "app_logs" {
 resource "aws_dynamodb_table" "sessions" {
   name           = "dash-sessions"
   billing_mode   = "PROVISIONED"
-  read_capacity  = 250
-  write_capacity = 250
+  read_capacity  = 500
+  write_capacity = 500
   hash_key       = "id"
 
   attribute {
@@ -105,7 +105,7 @@ resource "aws_sqs_queue" "jobs" {
 
 resource "aws_kinesis_stream" "events" {
   name             = "dash-events"
-  shard_count      = 8
+  shard_count      = 16
   retention_period = 168
 }
 
@@ -116,6 +116,38 @@ resource "aws_sns_topic" "alerts" {
 resource "aws_secretsmanager_secret" "app_config" {
   name                    = "dash/app-config"
   recovery_window_in_days = 30
+}
+
+resource "aws_ecr_repository" "app" {
+  name = "dash-app"
+}
+
+resource "aws_athena_workgroup" "analytics" {
+  name = "dash-analytics"
+
+  configuration {
+    bytes_scanned_cutoff_per_query = 10737418240
+  }
+}
+
+resource "aws_opensearch_domain" "search" {
+  domain_name    = "dash-search"
+  engine_version = "OpenSearch_2.11"
+
+  cluster_config {
+    instance_type  = "r6g.large.search"
+    instance_count = 3
+  }
+
+  ebs_options {
+    ebs_enabled = true
+    volume_size = 200
+    volume_type = "gp3"
+  }
+
+  tags = {
+    Environment = "production"
+  }
 }
 
 resource "aws_cloudwatch_log_group" "lambda_hello" {
