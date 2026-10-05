@@ -23,6 +23,17 @@ resource "aws_instance" "my_web_app" {
   }
 }
 
+resource "aws_ebs_volume" "app_data" {
+  availability_zone = "us-east-1a"
+  size              = 500
+  type              = "gp3"
+
+  tags = {
+    Name        = "dash-app-data"
+    Environment = "production"
+  }
+}
+
 resource "aws_lambda_function" "my_hello_world" {
   runtime       = "nodejs12.x"
   handler       = "exports.test"
@@ -30,7 +41,7 @@ resource "aws_lambda_function" "my_hello_world" {
   function_name = "test"
   role          = "arn:aws:ec2:us-east-1:123123123123:instance/i-1231231231"
 
-  memory_size = 1024
+  memory_size = 2048
   tags = {
     Environment = "Prod"
   }
