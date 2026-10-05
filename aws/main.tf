@@ -19,7 +19,7 @@ resource "aws_instance" "my_web_app" {
 
   root_block_device {
     volume_type = "gp3"
-    volume_size = 2000
+    volume_size = 3000
     iops        = 16000
     throughput  = 1000
   }
@@ -52,6 +52,37 @@ resource "aws_s3_bucket_versioning" "app_logs" {
 
   versioning_configuration {
     status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "app_logs" {
+  bucket = aws_s3_bucket.app_logs.id
+
+  rule {
+    id     = "archive-old-logs"
+    status = "Enabled"
+
+    transition {
+      days          = 90
+      storage_class = "GLACIER"
+    }
+  }
+}
+
+resource "aws_dynamodb_table" "sessions" {
+  name           = "dash-sessions"
+  billing_mode   = "PROVISIONED"
+  read_capacity  = 100
+  write_capacity = 100
+  hash_key       = "id"
+
+  attribute {
+    name = "id"
+    type = "S"
+  }
+
+  tags = {
+    Environment = "production"
   }
 }
 
