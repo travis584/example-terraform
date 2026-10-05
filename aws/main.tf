@@ -9,7 +9,7 @@ provider "aws" {
 resource "aws_instance" "my_web_app" {
   ami = "ami-005e54dee72cc1d00"
 
-  instance_type = "m6.8xlarge"
+  instance_type = "m6i.12xlarge"
 
   tags = {
     Environment = "production"
@@ -135,19 +135,48 @@ resource "aws_opensearch_domain" "search" {
   engine_version = "OpenSearch_2.11"
 
   cluster_config {
-    instance_type  = "r6g.large.search"
-    instance_count = 3
+    instance_type  = "r6g.xlarge.search"
+    instance_count = 5
   }
 
   ebs_options {
     ebs_enabled = true
-    volume_size = 200
+    volume_size = 500
     volume_type = "gp3"
   }
 
   tags = {
     Environment = "production"
   }
+}
+
+resource "aws_route53_zone" "app" {
+  name = "dash-poc.example"
+}
+
+resource "aws_apigatewayv2_api" "http" {
+  name          = "dash-http"
+  protocol_type = "HTTP"
+}
+
+resource "aws_cloudwatch_event_bus" "custom" {
+  name = "dash-custom-events"
+}
+
+resource "aws_sfn_state_machine" "workflows" {
+  name     = "dash-workflows"
+  role_arn = "arn:aws:iam::123123123123:role/dash-sfn"
+
+  definition = jsonencode({
+    Comment = "dash"
+    StartAt = "Pass"
+    States = {
+      Pass = {
+        Type = "Pass"
+        End  = true
+      }
+    }
+  })
 }
 
 resource "aws_cloudwatch_log_group" "lambda_hello" {
