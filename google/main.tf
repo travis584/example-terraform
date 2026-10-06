@@ -44,11 +44,3 @@ resource "google_sql_database_instance" "cud_demo" {
 
   deletion_protection = false
 }
-
-resource "google_redis_instance" "cud_demo" {
-  name           = "cud-demo-redis"
-  tier           = "BASIC"
-  memory_size_gb = 2
-  region         = "us-central1"
-  redis_version  = "REDIS_7_0"
-}
