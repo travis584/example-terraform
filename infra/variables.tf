@@ -15,9 +15,3 @@ variable "gcp_zone" {
   type        = string
   default     = "us-central1-a"
 }
-
-variable "enable_azure" {
-  description = "When true, creates a minimal Azure resource group (requires ARM_* credentials in TFC)."
-  type        = bool
-  default     = false
-}

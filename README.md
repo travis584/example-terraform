@@ -13,6 +13,5 @@ Use **`infra/`** as the **Terraform Working Directory**.
 |-------|-----------|--------|
 | **Google** | `e2-medium` VM in `var.gcp_zone` | Set workspace var `gcp_project` (and GCP credentials in TFC). |
 | **AWS** | One S3 bucket | Mock AWS keys in `providers.tf` suit many plan/cost runs. |
-| **Azure** | Optional resource group | Default **off** (`enable_azure = false`). Set `enable_azure = true` and add `ARM_*` env vars in TFC when you need a third cloud. |
 
-Legacy per-cloud Infracost usage files remain under `infra/aws`, `infra/azure`, and `infra/google`.
+Legacy per-cloud Infracost usage files remain under `infra/aws` and `infra/google` (`infra/azure` is Infracost-only).

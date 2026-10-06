@@ -34,13 +34,3 @@ resource "aws_s3_bucket" "poc_logs" {
     ManagedBy   = "terraform-cloud"
   }
 }
-
-# --- Azure (optional; off by default so TFC does not need az CLI / ARM creds) ---
-
-module "azure" {
-  count  = var.enable_azure ? 1 : 0
-  source = "./azure"
-
-  location = "eastus"
-  name     = "example-terraform-poc"
-}
