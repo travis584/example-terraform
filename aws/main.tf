@@ -9,7 +9,7 @@ provider "aws" {
 resource "aws_instance" "my_web_app" {
   ami = "ami-005e54dee72cc1d00"
 
-  instance_type = "m3.xlarge" # <<<<<<<<<< Try changing this to m5.xlarge to compare the costs
+  instance_type = "m5.large"
 
   tags = {
     Environment = "production"
@@ -18,7 +18,30 @@ resource "aws_instance" "my_web_app" {
   }
 
   root_block_device {
-    volume_size = 1000 # <<<<<<<<<< Try adding volume_type="gp3" to compare costs
+    volume_type = "gp3"
+    volume_size = 2500
+    iops        = 3000
+    throughput  = 125
+  }
+}
+
+resource "aws_ebs_volume" "app_data" {
+  availability_zone = "us-east-1a"
+  size              = 750
+  type              = "gp3"
+
+  tags = {
+    Name        = "dash-app-data"
+    Environment = "production"
+  }
+}
+
+resource "aws_s3_bucket" "app_logs" {
+  bucket = "travis584-example-terraform-tfc-poc-logs"
+
+  tags = {
+    Name        = "dash-app-logs"
+    Environment = "production"
   }
 }
 
@@ -29,9 +52,10 @@ resource "aws_lambda_function" "my_hello_world" {
   function_name = "test"
   role          = "arn:aws:ec2:us-east-1:123123123123:instance/i-1231231231"
 
-  memory_size = 512
+  memory_size = 1024
+  timeout     = 30
+
   tags = {
     Environment = "Prod"
   }
 }
-
