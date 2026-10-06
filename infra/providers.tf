@@ -7,7 +7,8 @@ provider "aws" {
 }
 
 provider "azurerm" {
-  skip_provider_registration = true
+  # azurerm 5.x: skip_provider_registration was removed; "none" matches the old skip=true behavior.
+  resource_provider_registrations = "none"
   features {}
 }
 
