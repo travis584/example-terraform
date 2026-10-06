@@ -5,12 +5,14 @@
 Use our [Get Started](https://www.infracost.io/docs) guide and the example Terraform projects in this repo to see how Infracost works. The AWS Terraform project contains an EC2 instance and a Lambda function.
 There is also an Azure and Google example.
 
-## Terraform Cloud (single workspace)
+## Terraform Cloud (single workspace, GCP-first)
 
-All three clouds run from one root module under **`infra/`**:
+Use **`infra/`** as the **Terraform Working Directory**.
 
-- `infra/main.tf` — calls `./aws`, `./azure`, and `./google` modules
-- `infra/providers.tf` — AWS, Azure, and Google provider configuration
-- `infra/aws`, `infra/azure`, `infra/google` — per-cloud resources
+| Cloud | What runs | Notes |
+|-------|-----------|--------|
+| **Google** | `e2-medium` VM in `var.gcp_zone` | Set workspace var `gcp_project` (and GCP credentials in TFC). |
+| **AWS** | One S3 bucket | Mock AWS keys in `providers.tf` suit many plan/cost runs. |
+| **Azure** | Optional resource group | Default **off** (`enable_azure = false`). Set `enable_azure = true` and add `ARM_*` env vars in TFC when you need a third cloud. |
 
-In the workspace, set **Terraform Working Directory** to **`infra`** (not `infra/aws` or the repo root).
+Legacy per-cloud Infracost usage files remain under `infra/aws`, `infra/azure`, and `infra/google`.
