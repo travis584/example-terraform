@@ -4,16 +4,14 @@ provider "google" {
 }
 
 resource "google_compute_instance" "cud_demo" {
-  count = 2
-
-  name         = "cud-demo-${count.index + 1}"
+  name         = "cud-demo"
   zone         = "us-central1-a"
   machine_type = "n1-standard-32"
 
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-12"
-      size  = 100
+      size  = 50
       type  = "pd-ssd"
     }
   }
@@ -35,14 +33,9 @@ resource "google_sql_database_instance" "cud_demo" {
   region           = "us-central1"
 
   settings {
-    tier              = "db-custom-8-30720"
-    availability_type = "ZONAL"
-    disk_type         = "PD_SSD"
-    disk_size         = 100
-
-    backup_configuration {
-      enabled = true
-    }
+    tier      = "db-custom-2-7680"
+    disk_type = "PD_SSD"
+    disk_size = 50
 
     ip_configuration {
       ipv4_enabled = true
@@ -54,8 +47,8 @@ resource "google_sql_database_instance" "cud_demo" {
 
 resource "google_redis_instance" "cud_demo" {
   name           = "cud-demo-redis"
-  tier           = "STANDARD_HA"
-  memory_size_gb = 10
+  tier           = "BASIC"
+  memory_size_gb = 2
   region         = "us-central1"
   redis_version  = "REDIS_7_0"
 }
