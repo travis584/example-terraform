@@ -1,8 +1,3 @@
-provider "azurerm" {
-  skip_provider_registration = true
-  features {}
-}
-
 resource "azurerm_linux_virtual_machine" "my_linux_vm" {
   location            = "eastus"
   name                = "test"

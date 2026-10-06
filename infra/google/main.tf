@@ -1,8 +1,3 @@
-provider "google" {
-  region  = "us-central1"
-  project = "test"
-}
-
 resource "google_compute_instance" "cud_demo" {
   name         = "cud-demo"
   zone         = "us-central1-a"
