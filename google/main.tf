@@ -6,7 +6,7 @@ provider "google" {
 resource "google_compute_instance" "cud_demo" {
   name         = "cud-demo"
   zone         = "us-central1-a"
-  machine_type = "n1-standard-16"
+  machine_type = "n1-standard-32"
 
   boot_disk {
     initialize_params {
