@@ -6,12 +6,12 @@ provider "google" {
 resource "google_compute_instance" "cud_demo" {
   name         = "cud-demo"
   zone         = "us-central1-a"
-  machine_type = "n1-standard-16"
+  machine_type = "n1-standard-32"
 
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-12"
-      size  = 50
+      size  = 200
       type  = "pd-ssd"
     }
   }
@@ -35,7 +35,7 @@ resource "google_sql_database_instance" "cud_demo" {
   settings {
     tier      = "db-custom-2-7680"
     disk_type = "PD_SSD"
-    disk_size = 50
+    disk_size = 112
 
     ip_configuration {
       ipv4_enabled = true
