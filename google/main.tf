@@ -35,7 +35,7 @@ resource "google_sql_database_instance" "cud_demo" {
   settings {
     tier      = "db-custom-2-7680"
     disk_type = "PD_SSD"
-    disk_size = 111
+    disk_size = 112
 
     ip_configuration {
       ipv4_enabled = true
