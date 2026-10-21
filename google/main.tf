@@ -11,7 +11,31 @@ resource "google_compute_instance" "cud_demo" {
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-12"
-      size  = 280
+      size  = 282
+      type  = "pd-ssd"
+    }
+  }
+
+  network_interface {
+    network = "default"
+    access_config {}
+  }
+
+  labels = {
+    environment = "production"
+    service     = "cud-demo"
+  }
+}
+
+resource "google_compute_instance" "cud_demo_b" {
+  name         = "cud-demo-b"
+  zone         = "us-central1-b"
+  machine_type = "n1-standard-32"
+
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-12"
+      size  = 282
       type  = "pd-ssd"
     }
   }
