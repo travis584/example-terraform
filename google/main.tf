@@ -11,7 +11,7 @@ resource "google_compute_instance" "cud_demo" {
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-12"
-      size  = 200
+      size  = 250
       type  = "pd-ssd"
     }
   }
@@ -35,7 +35,13 @@ resource "google_sql_database_instance" "cud_demo" {
   settings {
     tier      = "db-custom-2-7680"
     disk_type = "PD_SSD"
-    disk_size = 125
+    disk_size = 162
+
+    backup_configuration {
+      enabled                        = true
+      start_time                     = "03:00"
+      point_in_time_recovery_enabled = true
+    }
 
     ip_configuration {
       ipv4_enabled = true
@@ -43,4 +49,20 @@ resource "google_sql_database_instance" "cud_demo" {
   }
 
   deletion_protection = false
+}
+
+resource "google_storage_bucket" "cud_demo_logs" {
+  name     = "cud-demo-logs"
+  location = "US"
+
+  storage_class = "STANDARD"
+
+  versioning {
+    enabled = true
+  }
+
+  labels = {
+    environment = "production"
+    service     = "cud-demo"
+  }
 }
