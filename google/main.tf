@@ -33,9 +33,9 @@ resource "google_sql_database_instance" "cud_demo" {
   region           = "us-central1"
 
   settings {
-    tier      = "db-custom-2-7680"
+    tier      = "db-custom-4-15360"
     disk_type = "PD_SSD"
-    disk_size = 162
+    disk_size = 200
 
     backup_configuration {
       enabled                        = true
