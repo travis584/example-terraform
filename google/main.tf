@@ -11,7 +11,7 @@ resource "google_compute_instance" "cud_demo" {
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-12"
-      size  = 280
+      size  = 281
       type  = "pd-ssd"
     }
   }
@@ -35,7 +35,7 @@ resource "google_compute_instance" "cud_demo_b" {
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-12"
-      size  = 280
+      size  = 281
       type  = "pd-ssd"
     }
   }
