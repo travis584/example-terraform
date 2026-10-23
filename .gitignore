@@ -7,5 +7,6 @@ bigplan.json
 bigplan.save
 /demo
 .infracost
+aws-dev/cost-estimate-*.json
 .DS_Store
 .idea/
