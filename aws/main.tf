@@ -1,3 +1,15 @@
+terraform {
+  required_version = "1.17.0"
+
+  cloud {
+    organization = "travis-dev"
+
+    workspaces {
+      name = "example-terraform-cli"
+    }
+  }
+}
+
 provider "aws" {
   region                      = "us-east-1"
   skip_credentials_validation = true
