@@ -144,7 +144,11 @@ jq -n \
   '{
     data: {
       type: "runs",
-      attributes: {message: $message, "auto-apply": false},
+      attributes: {
+        message: $message,
+        "auto-apply": false,
+        "plan-only": true
+      },
       relationships: {
         workspace: {data: {type: "workspaces", id: $workspace_id}},
         "configuration-version": {
