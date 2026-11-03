@@ -115,6 +115,28 @@ curl --fail --silent --show-error --request PUT \
   --upload-file "$archive" \
   "$upload_url"
 
+# A manually queued run must wait until Terraform Cloud has processed the
+# uploaded archive; otherwise it can remain pending indefinitely.
+for ((poll = 1; poll <= MAX_POLLS; poll++)); do
+  api_request GET "/configuration-versions/${configuration_version_id}"
+  configuration_version_status="$(jq -r '.data.attributes.status' "$response_body")"
+  echo "Configuration version status: $configuration_version_status"
+  if [[ "$configuration_version_status" == "uploaded" ]]; then
+    break
+  fi
+  if [[ "$configuration_version_status" == "errored" ]]; then
+    cat "$response_body" >&2
+    echo "Configuration version did not finish uploading." >&2
+    exit 1
+  fi
+  sleep "$POLL_INTERVAL_SECONDS"
+done
+
+if ((poll > MAX_POLLS)); then
+  echo "Timed out waiting for configuration version $configuration_version_id." >&2
+  exit 1
+fi
+
 jq -n \
   --arg workspace_id "$workspace_id" \
   --arg configuration_version_id "$configuration_version_id" \

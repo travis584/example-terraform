@@ -30,9 +30,8 @@ jobs:
       TFC_ORGANIZATION: travis-dev
       TFC_WORKSPACE: example-terraform-api
       TFC_RUN_MESSAGE: >-
-        Triggered from Terraform Cloud CI by PR author
-        (${{ github.event.pull_request.user.login }}) for SHA
-        (${{ github.event.pull_request.head.sha }})
+        PR ${{ github.event.pull_request.number }}
+        ${{ github.event.pull_request.head.sha }}
     steps:
       - name: Check out the PR commit
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
