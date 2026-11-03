@@ -2,6 +2,7 @@ terraform {
   required_version = "1.17.0"
 }
 
+# PRCI Terraform Cloud run-to-PR linking smoke test; no infrastructure behavior changes.
 provider "aws" {
   region                      = "us-east-1"
   skip_credentials_validation = true
